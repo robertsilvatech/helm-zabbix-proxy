@@ -1,0 +1,35 @@
+# Default values for zabbix-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace: zabbix6
+
+image:
+  repository: zabbix/zabbix-proxy-sqlite3
+  imagePullPolicy: IfNotPresent
+  tag: "ol-6.0.2"
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 500Mi
+  limits:
+    cpu: 1000m
+    memory: 1000Mi
+
+readinessProbe:
+  tcpSocket:
+    port: 10051
+  initialDelaySeconds: 120
+  periodSeconds: 10
+  failureThreshold: 8
+
+livenessProbe:
+  tcpSocket:
+    port: 10051
+  initialDelaySeconds: 120
+  timeoutSeconds: 1
+
+service:
+  port: 10051
+  targetPort: 10051

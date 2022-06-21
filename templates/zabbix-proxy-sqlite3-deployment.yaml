@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.namespace }}
+  {{- if .Values.zabbixproxy.metadata.labels.enabled }}
+  labels:
+    app: {{ .Values.zabbixproxy.metadata.labels.app }}
+    app.gitlab.com/env: {{ .Values.zabbixproxy.metadata.labels.appGitLabEnv }}
+    app.gitlab.com/app: {{ .Values.zabbixproxy.metadata.labels.appGitLabApp }}
+    maintainers: {{ .Values.zabbixproxy.metadata.labels.maintainers }}
+  {{- end }}
+  {{- if .Values.zabbixproxy.metadata.annotations.enabled }}
+  annotations:
+    app.gitlab.com/env: {{ .Values.zabbixproxy.metadata.annotations.appGitLabEnv }}
+    app.gitlab.com/app: {{ .Values.zabbixproxy.metadata.annotations.appGitLabApp }}
+  {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}-service
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image.repository}}:{{ .Values.image.tag}}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
+          protocol: TCP
+        {{- if .Values.resources }}
+        resources:
+        {{- toYaml .Values.resources | nindent 10 }}
+        {{- end }}
+        {{- if .Values.readinessProbe }}
+        readinessProbe:
+        {{- toYaml .Values.readinessProbe | nindent 10}}
+        {{- end }}
+        {{- if .Values.livenessProbe }}
+        livenessProbe:
+        {{- toYaml .Values.livenessProbe | nindent 10}}
+        {{- end }}        
+        env:
+          - name: ZBX_HOSTNAME
+            value: {{ upper .Release.Name }}
+          - name: ZBX_SERVER_HOST
+            value: zbx-server-mysql-service

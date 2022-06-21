@@ -4,6 +4,10 @@
 
 namespace: zabbix6
 
+metadata:
+  annotations: {}
+  labels: {}
+  
 image:
   repository: zabbix/zabbix-proxy-sqlite3
   imagePullPolicy: IfNotPresent

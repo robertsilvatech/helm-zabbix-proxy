@@ -3,17 +3,13 @@ kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
-  {{- if .Values.zabbixproxy.metadata.labels.enabled }}
+  {{- if .Values.metadata.labels }}
   labels:
-    app: {{ .Values.zabbixproxy.metadata.labels.app }}
-    app.gitlab.com/env: {{ .Values.zabbixproxy.metadata.labels.appGitLabEnv }}
-    app.gitlab.com/app: {{ .Values.zabbixproxy.metadata.labels.appGitLabApp }}
-    maintainers: {{ .Values.zabbixproxy.metadata.labels.maintainers }}
+    {{- toYaml .Values.metadata.labels | nindent 4 }}
   {{- end }}
-  {{- if .Values.zabbixproxy.metadata.annotations.enabled }}
+  {{- if .Values.metadata.annotations }}
   annotations:
-    app.gitlab.com/env: {{ .Values.zabbixproxy.metadata.annotations.appGitLabEnv }}
-    app.gitlab.com/app: {{ .Values.zabbixproxy.metadata.annotations.appGitLabApp }}
+    {{- toYaml .Values.metadata.annotations | nindent 4 }}
   {{- end }}
 spec:
   replicas: 1

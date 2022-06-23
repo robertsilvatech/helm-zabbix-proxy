@@ -1,11 +1,16 @@
 apiVersion: v2
 name: zabbix-proxy
 description: A simple helm chart for using Zabbix on Kubernetes or Openshift
-version: 0.0.1
+version: 1.0.0
 appVersion: 6.0.2
-source:
-  - https://github.com/robertsilvatech/helm-zabbix-proxy
+keywords:
+  - zabbix
+  - zabbix proxy
+  - monitoring
+  - jlcp
+sources:
+  - https://github.com/robertsilvatech/helm-zabbix-proxy/
 maintainers:
   - name: Robert Silva
     email: robert.silva@jlcp.com.br
-    url: https://github.com/robertsilvatech
+    
